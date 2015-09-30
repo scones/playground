@@ -9,6 +9,7 @@
 #include "app.h"
 #include "core/window.h"
 #include "core/error/error.h"
+#include "core/resources.h"
 
 #include "test/_001_dsa_buffer.h"
 #include "test/_002_dsa_vao.h"
@@ -48,17 +49,22 @@ app::app(std::int32_t argc, char** argv)
 
 
 void app::initialize_test() {
+  core::resources::shutdown();
+
   delete m_pcurrent_test;
   m_pcurrent_test = nullptr;
   switch (s_config->get_current_test()) {
     case 1:
       m_pcurrent_test = new _001_dsa_buffer();
+      m_current_test_name = "001 dsa buffer";
       break;
     case 2:
       m_pcurrent_test = new _002_dsa_vao();
+      m_current_test_name = "002 dsa vertex_array";
       break;
     case 3:
       m_pcurrent_test = new _003_attrib_format();
+      m_current_test_name = "003 attrib format";
       break;
     default:
       throw core::error::error("unknown test");
@@ -83,12 +89,14 @@ void app::initialize_test() {
   pprimary_window->make_current();
 
   m_pcurrent_test->init();
+  core::resources::init();
 }
 
 
 void app::run() {
   do {
     glfwPollEvents();
+    core::charset* font14 = core::resources::get_font(14);
     update();
 
     if (!pprimary_window)
@@ -96,6 +104,7 @@ void app::run() {
 
     m_pcurrent_test->render();
 
+    font14->render_text_ortho(m_current_test_name, 20, 20, core::charset::LEFT);
     pprimary_window->swap_buffers();
   } while ((!pprimary_window || !pprimary_window->should_close()) && m_active);
 }
@@ -122,11 +131,12 @@ void app::key_callback(GLFWwindow *window, std::int32_t key, std::int32_t scanco
       m_active = false;
       break;
     case GLFW_KEY_PAGE_UP:
-      s_config->set_current_test((s_config->get_current_test() + 1) % TEST_TYPE::MAX + 1);
+      s_config->set_current_test((s_config->get_current_test() - 1 + 1) % TEST_TYPE::MAX + 1);
       initialize_test();
       break;
     case GLFW_KEY_PAGE_DOWN:
-      s_config->set_current_test((s_config->get_current_test() - 1) % TEST_TYPE::MAX + 1);
+      std::int32_t temp = (((std::int32_t)s_config->get_current_test() - 1 - 1) % TEST_TYPE::MAX + TEST_TYPE::MAX) % TEST_TYPE::MAX + 1;
+      s_config->set_current_test(temp);
       initialize_test();
       break;
   }

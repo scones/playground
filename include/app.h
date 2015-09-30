@@ -18,6 +18,7 @@
 
 
 #include <cinttypes>
+#include <string>
 
 
 class app {
@@ -63,6 +64,7 @@ class app {
   core::glfw m_glfw;
   test* m_pcurrent_test;
   bool m_active;
+  std::string m_current_test_name;
 };
 
 
