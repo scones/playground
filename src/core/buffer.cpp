@@ -49,5 +49,30 @@ namespace core {
   void buffer::unmap(std::uint32_t index) {
     glUnmapNamedBuffer(m_names[index]);
   }
+
+
+  buffer::activation_object buffer::activate(std::uint32_t index, std::uint32_t type) {
+    return buffer::activation_object(type, m_names[index]);
+  }
+
+
+  buffer::activation_object::activation_object(std::uint32_t type, std::uint32_t name) : m_type(type), m_name(name) {
+    glBindBuffer(m_type, m_name);
+  }
+
+
+  buffer::activation_object::~activation_object() {
+    if (m_name) {
+      glBindBuffer(m_type, 0);
+    }
+  }
+
+
+  buffer::activation_object::activation_object(activation_object&& right) {
+    m_type = right.m_type;
+    m_name = right.m_name;
+    right.m_name = 0;
+    right.m_type = 0;
+  }
 }
 
