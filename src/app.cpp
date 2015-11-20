@@ -14,6 +14,8 @@
 #include "test/_001_dsa_buffer.h"
 #include "test/_002_dsa_vao.h"
 #include "test/_003_attrib_format.h"
+#include "test/_004_lua_test.h"
+#include "test/_005_js_test.h"
 
 
 #include <iostream>
@@ -30,6 +32,8 @@ namespace {
     DSA_BUFFER = 0,
     DSA_VAO,
     ATTRIB_FORMAT,
+    LUA_TEST,
+    CS_TEST,
     MAX
   };
 }
@@ -65,6 +69,14 @@ void app::initialize_test() {
     case 3:
       m_pcurrent_test = new _003_attrib_format();
       m_current_test_name = "003 attrib format";
+      break;
+    case 4:
+      m_pcurrent_test = new _004_lua_test();
+      m_current_test_name = "004 lua test";
+      break;
+    case 5:
+      m_pcurrent_test = new _005_js_test();
+      m_current_test_name = "005 js test";
       break;
     default:
       throw core::error::error("unknown test");
