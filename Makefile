@@ -17,7 +17,7 @@ LIBS_STATIC_OPENGL    = -lglew32 -lglfw3 -lopengl32 -lgdi32
 LIBS_STATIC_FREETYPE  = -lfreetype64 #-lpng -lz -lharfbuzz -lbz2 #-lglib-2.0 -lbz2 -lintl -liconv -ole32
 LIBS_STATIC_BOOST     = -lboost_system-mt -lboost_program_options-mt -lboost_filesystem-mt
 LIBS_STATIC_SYSTEM    = -lwinmm
-#LIBS_STATIC_JS        = -lduktape -lm
+LIBS_STATIC_JS        = -lduktape #-lm
 LIBS_SHARED_SYSTEM    = -lluajit-5.1
 
 ifeq ($(MSYSTEM), MINGW64)
@@ -39,7 +39,6 @@ find = $(foreach dir,$(1),$(foreach d,$(wildcard $(dir)/*),$(call find,$(d),$(2)
 
 SOURCES_LIB       = $(call find, src, *.cpp)
 SOURCES           = $(SOURCES_LIB) main.cpp
-SOURCES          += src/duktape.c
 OBJECTS           = $(SOURCES:.cpp=.o)
 OBJECTS_LIB       = $(SOURCES_LIB:.cpp=.o)
 STATIC_TARGET     = lib/libplayground.a
